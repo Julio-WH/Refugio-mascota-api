@@ -1,10 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView,CreateView,UpdateView,DeleteView
 from django.core.urlresolvers import reverse_lazy
 from app.adopcion.models import Persona,Solicitud
 from app.adopcion.forms import AdopcionForm,solicitudForm
-# Create your views here.
+# ----------------class-----------------------------------------------
 def index_adopcion(request):
     return render(request,'adopcion/index.html')
 
@@ -47,7 +47,6 @@ class SolicitudCreate(CreateView):
             return HttpResponseRedirect(self.get_success_url())
         else:
             return self.render_to_response(self.get_context_data(form=form,form2=form))
-
 
 class AdopcionUpdate(UpdateView):
     model = Persona
@@ -96,3 +95,39 @@ class SolicitudDelete(DeleteView):
     model=Solicitud
     template_name='adopcion/solicitud_delete.html'
     success_url=reverse_lazy('adopcion:solicitud_lista')
+
+
+# ----------------Funciones-----------------------------------------------
+def adopcion_list(request):
+    adopcion=Persona.objects.all()
+    datos = {'adopcion':adopcion,'func':'f'}
+    return render(request,'adopcion/adopcion_list.html',datos)
+
+def adopcion_view(request):#agregar
+    if request.method=='POST':
+        form=AdopcionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('adopcion:adopcion_funct_lista')
+    else:
+        form=AdopcionForm()
+    
+    return render(request,'adopcion/adopcion_form.html',{'form':form})
+
+def adopcion_edit(request,id_adopcion):
+    adopcion=Persona.objects.get(id=id_adopcion)
+    if request.method=='GET':
+        form = AdopcionForm(instance=adopcion)
+    else:
+        form=AdopcionForm(request.POST,instance=adopcion)
+        if form.is_valid():
+            form.save()
+            return redirect('adopcion:adopcion_funct_lista')
+    return render(request,'adopcion/adopcion_form.html',{'form':form})
+
+def adopcion_delete(request,id_adopcion):
+    adopcion=Persona.objects.get(id=id_adopcion)
+    if request.method=='POST':
+        adopcion.delete()
+        return redirect('adopcion:adopcion_funct_lista')
+    return render(request,'adopcion/adopcion_delete.html',{'adopcion':adopcion,'def':'def'})

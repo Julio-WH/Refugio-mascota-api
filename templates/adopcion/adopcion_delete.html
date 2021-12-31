@@ -4,7 +4,12 @@
 <form method="POST">
     <div class="m-4">
         {%csrf_token%}
+        {%if def %}
+        <h2>Deseas eliminar el registro de {{adopcion.nombre}} ?</h2>
+        {%else%}
         <h2>Deseas eliminar el registro de {{object.nombre}} ?</h2>
+        {%endif%}
+        
         <button type="submit" class="btn btn-danger"><img src="https://img.icons8.com/ios-glyphs/64/000000/checkmark.png"/></button>
         <a type="button" href="{%url 'adopcion:adopcion_lista'%} " class="btn btn-primary"><img src="https://img.icons8.com/material-outlined/50/000000/cancel--v1.png"/></a>
     </div>

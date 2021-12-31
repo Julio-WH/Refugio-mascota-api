@@ -1,11 +1,18 @@
 {%extends 'base/base.html' %}
 {%block title%} Lista de Mascotas {%endblock%}
 {%block content%}
+
+{%if func %}
+<h1>funcion</h1>
+{%else%}
+<h1>class</h1>
+{%endif%}
+ 
 <div class="m-5">
     <table class="table">
         <thead>
           <tr>
-            <th scope="col">ID</th>
+            <th scope="col">ID </th>
             <th scope="col">Imagen</th>
             <th scope="col">Mascota</th>
             <th scope="col">Adoptante</th>
@@ -16,11 +23,16 @@
           </tr>
         </thead>
         <tbody>
+          {# Esto es un comentario #}
             {%if mascotas%}
             {%for mascota in mascotas%}
           <tr>
             <th scope="row">{{mascota.id}} </th>
+            {%if mascota.imagen.url != "" %}
             <td> <img src="{{mascota.imagen.url}}" width="100" height="100"> </td>
+            {%else%}
+            <td><h5>NO IMAGEN</h5></td>
+            {%endif%}
             <td>{{mascota.nombre}} </td>
             <td>{{mascota.persona.nombre}} {{mascota.persona.apellido}} </td>
             <td>{{mascota.sexo}} </td>
@@ -29,6 +41,28 @@
             <td>
                 <a type="button" href="{%url 'mascota:mascota_editar' mascota.id%} " class="btn btn-primary"><img src="https://img.icons8.com/ios-glyphs/30/000000/edit--v4.png"/></a>
                 <a type="button" href="{%url 'mascota:mascota_eliminar' mascota.id%} " class="btn btn-danger"><img src="https://img.icons8.com/ios-glyphs/30/000000/filled-trash.png"/></a>
+            </td>
+          </tr>
+          {%endfor%}
+          
+            {%elif object_list%}
+            {%for mascota in object_list%}
+            
+          <tr>
+            <th scope="row">{{mascota.id}} </th>
+            {%if mascota.imagen.url != "" %}
+            <td> <img src="{{mascota.imagen.url}}" width="100" height="100"> </td>
+            {%else%}
+            <td><h5>NO IMAGEN</h5></td>
+            {%endif%}
+            <td>{{mascota.nombre}} </td>
+            <td>{{mascota.persona.nombre}} {{mascota.persona.apellido}} </td>
+            <td>{{mascota.sexo}} </td>
+            <td>{{mascota.edad_aproximada}} </td>
+            <td>{{mascota.fecha_rescate}} </td>
+            <td>
+                <a type="button" href="{%url 'mascota:mascota_class_editar' mascota.id%} " class="btn btn-primary"><img src="https://img.icons8.com/ios-glyphs/30/000000/edit--v4.png"/></a>
+                <a type="button" href="{%url 'mascota:mascota_class_eliminar' mascota.id%} " class="btn btn-danger"><img src="https://img.icons8.com/ios-glyphs/30/000000/filled-trash.png"/></a>
             </td>
           </tr>
           {%endfor%}

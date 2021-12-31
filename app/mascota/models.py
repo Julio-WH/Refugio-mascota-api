@@ -14,7 +14,7 @@ class Mascota(models.Model):
     edad_aproximada=models.IntegerField()
     fecha_rescate=models.DateField()
     persona=models.ForeignKey(Persona,null=True, blank=True,on_delete=models.CASCADE)
-    vacuna=models.ManyToManyField(Vacuna)
-    imagen=models.ImageField(upload_to="mascotas",null=True)
+    vacuna=models.ManyToManyField(Vacuna,blank=True)
+    imagen=models.ImageField(upload_to="mascotas",null=True,blank=True)
     def __unicode__(self):
       return '{}'.format(self.nombre)
