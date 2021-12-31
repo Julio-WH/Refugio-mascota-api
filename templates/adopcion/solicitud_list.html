@@ -1,0 +1,36 @@
+{%extends 'base/base.html' %}
+{%block title%} Lista de Solicitud {%endblock%}
+{%block content%}
+<div class="m-5">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">No.Solitictud</th>
+            <th scope="col">Adoptante</th>
+            <th scope="col">No.Mascota</th>
+            <th scope="col">Razones</th>
+            <th scope="col">Accion</th>
+          </tr>
+        </thead>
+        <tbody>
+            {%if object_list%}
+            {%for solicitud in object_list%}
+          <tr>
+            <th scope="row">{{solicitud.id}} </th>
+            <td>{{solicitud.persona.nombre}} {{solicitud.persona.apellido}} </td>
+            <td>{{solicitud.numero_mascotas}} </td>
+            <td>{{solicitud.razones}} </td>
+            <td>
+                <a type="button" href="{%url 'adopcion:solicitud_editar' solicitud.id %}" class="btn btn-primary"><img src="https://img.icons8.com/ios-glyphs/30/000000/edit--v4.png"/></a>
+                <a type="button" href="{%url 'adopcion:solicitud_eliminar' solicitud.id %}" class="btn btn-danger">Eliminar</a>
+            </td>
+          </tr>
+          {%endfor%}
+          {%else%}
+          <h1>No hay registros de Solicitud</h1>
+          {%endif%}
+        </tbody>
+      </table>
+</div>
+
+{%endblock%}

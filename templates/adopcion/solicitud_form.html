@@ -1,0 +1,43 @@
+{%extends 'base/base.html'%}
+{%block title%}Nueva Solicitud{%endblock%}
+{%block content%}
+<form method="POST">
+    <div class="m-5">
+        {%csrf_token%}
+        <div class="mb-3">
+            <label for="{{form2.nombre.name}}">{{form2.nombre.label}}</label>
+            {{form2.nombre}}
+        </div>
+        <div class="mb-3">
+            <label for="{{form2.apellido.name}}">{{form2.apellido.label}}</label>
+            {{form2.apellido}}
+        </div>
+        <div class="mb-3">
+            <label for="{{form2.edad.name}}">{{form2.edad.label}}</label>
+            {{form2.edad}}
+        </div>
+        <div class="mb-3">
+            <label for="{{form2.telefono.name}}">{{form2.telefono.label}}</label>
+        {{form2.telefono}}
+        </div>
+        <div class="mb-3">
+            <label for="{{form2.email.name}}">{{form2.email.label}}</label>
+            {{form2.email}}
+        </div>
+        <div class="mb-3">
+            <label for="{{form2.domicilio.name}}">{{form2.domicilio.label}}</label>
+        {{form2.domicilio}}
+        </div>
+        <div class="mb-3">
+            <label for="{{form.numero_mascotas.name}}">{{form.numero_mascotas.label}}</label>
+        {{form.numero_mascotas}}
+        </div>
+        <div class="mb-3">
+            <label for="{{form.razones.name}}">{{form.razones.label}}</label>
+        {{form.razones}}
+        </div>
+        <button class="btn btn-primary ">Agregar</button>
+    </div>
+   
+</form>
+{%endblock%}

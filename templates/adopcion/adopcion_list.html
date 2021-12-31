@@ -1,0 +1,40 @@
+{%extends 'base/base.html' %}
+{%block title%} Lista de Adopcion {%endblock%}
+{%block content%}
+<div class="m-5">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Edad</th>
+            <th scope="col">Telefono</th>
+            <th scope="col">Email</th>
+            <th scope="col">Domicilio</th>
+            <th scope="col">Accion</th>
+          </tr>
+        </thead>
+        <tbody>
+            {%if object_list%}
+            {%for persona in object_list%}
+          <tr>
+            <th scope="row">{{persona.id}} </th>
+            <td>{{persona.nombre}} {{persona.apellido}} </td>
+            <td>{{persona.edad}} </td>
+            <td>{{persona.telefono}} </td>
+            <td>{{persona.email}} </td>
+            <td>{{persona.domicilio}} </td>
+            <td>
+                <a type="button" href="{%url 'adopcion:adopcion_editar' persona.id %}" class="btn btn-primary"><img src="https://img.icons8.com/ios-glyphs/30/000000/edit--v4.png"/></a>
+                <a type="button" href="{%url 'adopcion:adopcion_eliminar' persona.id%} " class="btn btn-danger">Eliminar</a>
+            </td>
+          </tr>
+          {%endfor%}
+          {%else%}
+          <h1>No hay registros de Personas</h1>
+          {%endif%}
+        </tbody>
+      </table>
+</div>
+
+{%endblock%}

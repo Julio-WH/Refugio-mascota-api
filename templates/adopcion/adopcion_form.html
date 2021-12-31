@@ -1,0 +1,12 @@
+{%extends 'base/base.html'%}
+{%block title%}Agregar Persona{%endblock%}
+{%block content%}
+<form method="POST">
+    <div class="m-4">
+        {%csrf_token%}
+        {{form.as_p}}
+        <button class="btn btn-primary">Agregar</button>
+    </div>
+   
+</form>
+{%endblock%}

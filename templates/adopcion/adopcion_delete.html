@@ -1,0 +1,13 @@
+{%extends 'base/base.html'%}
+{%block title%}Eliminar Persona{%endblock%}
+{%block content%}
+<form method="POST">
+    <div class="m-4">
+        {%csrf_token%}
+        <h2>Deseas eliminar el registro de {{object.nombre}} ?</h2>
+        <button type="submit" class="btn btn-danger"><img src="https://img.icons8.com/ios-glyphs/64/000000/checkmark.png"/></button>
+        <a type="button" href="{%url 'adopcion:adopcion_lista'%} " class="btn btn-primary"><img src="https://img.icons8.com/material-outlined/50/000000/cancel--v1.png"/></a>
+    </div>
+   
+</form>
+{%endblock%}
