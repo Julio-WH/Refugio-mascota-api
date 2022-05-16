@@ -1,5 +1,9 @@
 from django import forms
-from app.mascota.models import Mascota
+
+from app.adopcion.models import Persona
+from app.mascota.models import Mascota, Vacuna
+
+
 class MascotaForm(forms.ModelForm):
     class Meta:
         model=Mascota
@@ -30,3 +34,16 @@ class MascotaForm(forms.ModelForm):
             'persona':forms.Select(attrs={'class':'form-control'}),
             'vacuna':forms.CheckboxSelectMultiple(),
         }
+
+
+class MascotaApiForm(forms.Form):
+    TIPO_SEXO = (
+        ('Macho', 'Macho'),
+        ('Hembra', 'Hembra'),
+    )
+    nombre = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    sexo = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), required=False, choices=TIPO_SEXO)
+    edad_aproximada = forms.CharField(max_length=10, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    fecha_rescate = forms.DateField(widget=forms.TextInput(attrs={'class': 'form-control', 'type':'date'}), required=False)
+    persona = forms.ModelChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), queryset=Persona.objects.all())
+    vacuna = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple(), required=False, queryset=Vacuna.objects.all())

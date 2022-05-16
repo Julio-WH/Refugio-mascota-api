@@ -20,6 +20,15 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^mascota/', include('app.mascota.urls',namespace="mascota")),
-    url(r'^adopcion/', include('app.adopcion.urls',namespace="adopcion")),
+    url(r'^mascota/', include('app.mascota.urls', namespace="mascota")),
+    url(r'^adopcion/', include('app.adopcion.urls', namespace="adopcion")),
+    url(r'^api/', include('app.API.urls', namespace="apis")),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    # Archivos subidos por el usuario
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    import debug_toolbar
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]

@@ -32,6 +32,17 @@
                   <li><a class="dropdown-item" href="{%url 'adopcion:adopcion_funct_lista'%}">Lista(func)</a></li>
                 </ul>
               </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  API
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <li><a class="dropdown-item" href="{%url 'mascota:api_list' "Decorador" %}">Decorador</a></li>
+                  <li><a class="dropdown-item" href="{%url 'mascota:api_list' "ApiView" %}">APIVIEW</a></li>
+                  <li><a class="dropdown-item" href="{%url 'mascota:api_list' "Genericview" %}">Generic ApiView</a></li>
+                  <li><a class="dropdown-item" href="{%url 'mascota:api_list' "ViewSet" %}">ViewSet</a></li>
+                </ul>
+              </li>
               <li class="nav-item dropdown">
                 <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Solicitud
