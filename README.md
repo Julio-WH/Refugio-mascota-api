@@ -4,7 +4,7 @@ Aplicacion CRUD de prueba, Refugio de animales
 ## Instalacion
 
 ### Paso 1: Gt clone al proyecto en la carpeta deseada
-    git clone https://github.com/hilario-wh/refugio.git](https://github.com/Julio-WH/Test
+    https://github.com/Julio-WH/Test](https://github.com/Julio-WH/Test
 ### Paso 2: Creacion del entorno en la carpeta deseada
     mkvirtualenv envrefugio -p=2.7
 ### Paso 3: Iniciar el entorno
