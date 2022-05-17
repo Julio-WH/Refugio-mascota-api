@@ -3,6 +3,9 @@ import json
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
+from rest_framework.parsers import JSONParser
+from rest_framework.request import Request
+
 from app.API.view.view_apiview import ListMascotas, DetalleMascota, MascotaPersonaList
 from app.API.view.view_decorador import list_mascotas, detail_mascota, mascota_persona_list
 from app.API.view.view_generic import MascotaListGeneric, MascotaDetailsGeneric, MascotaPersonaListGeneric
@@ -87,6 +90,12 @@ class MascotaDelete(DeleteView):
 
 "-----------------------API------------------------"
 
+def add_errors_form(form, response):
+    for field in response:
+        for error in response.get(field):
+            form.add_error(field, error)
+    return form
+
 
 def format_mascota(mascota):
     mascota = json.loads(json.dumps(mascota))
@@ -150,7 +159,10 @@ def api_edit(request, tipo_api, id_mascota):
                 # En caso de errores provenientes del endpoint los agregamos manualmente al formulario
                 serializers_errors = mascota_instance.data.serializer.errors
                 for error in serializers_errors:
-                    form.add_error(error, serializers_errors.get(error)[0].title())
+                    if error == 'non_field_errors':
+                        form.add_error('__all__', serializers_errors.get(error)[0])
+                        continue
+                    form.add_error(error, serializers_errors.get(error)[0])
     else:
         if tipo_api == "ApiView":
             instance = DetalleMascota()
@@ -182,10 +194,11 @@ def api_edit(request, tipo_api, id_mascota):
 def api_add(request, tipo_api):
     form = MascotaApiForm(request.POST or None)
     if request.POST and form.is_valid():
-        request.data = request.POST.copy
+        # request2 = request.POST.copy()
+        # del request2['sexo']
+        # request.POST = request2
         if tipo_api == "ApiView":
-            instance = ListMascotas()
-            mascota_instance = instance.post(request=request)
+            mascota_instance = ListMascotas.as_view()(request)
 
         elif tipo_api == "ViewSet":
             instance = MascotaViewset()
@@ -194,6 +207,9 @@ def api_add(request, tipo_api):
         elif tipo_api == "Genericview":
             mascota_instance = MascotaListGeneric.as_view()(request)
 
+        elif tipo_api == "Decorador":
+            mascota_instance = list_mascotas(request=request)
+
         if mascota_instance.status_code == status.HTTP_201_CREATED:
             messages.success(request, "Se agrego Correctamente la Nueva Mascota")
             return HttpResponseRedirect((reverse('mascota:api_list', args=[tipo_api])))
@@ -201,7 +217,10 @@ def api_add(request, tipo_api):
             # En caso de errores provenientes del endpoint los agregamos manualmente al formulario
             serializers_errors = mascota_instance.data.serializer.errors
             for error in serializers_errors:
-                form.add_error(error, serializers_errors.get(error)[0].title())
+                if error == 'non_field_errors':
+                    form.add_error('__all__', serializers_errors.get(error)[0])
+                    continue
+                form.add_error(error, serializers_errors.get(error)[0])
     datos = {'form': form, 'tipo': tipo_api}
     return render(request, 'mascota/api_mascota_form.html', datos)
 

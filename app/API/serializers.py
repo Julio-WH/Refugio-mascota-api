@@ -43,3 +43,8 @@ class MascotasSerializer(serializers.ModelSerializer):
         if values['persona'] is not None: values['persona'] = PersonaSerializer(instance.persona).data
         values['vacuna'] = VacunaSerializer(instance.vacuna, many=True).data
         return  values
+
+    #para probar que funcione los errores de non-field error #
+    # def validate(self, attrs):
+    #     raise serializers.ValidationError("Prueba de error non-field")
+    #     return attrs
