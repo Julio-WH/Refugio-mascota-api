@@ -48,3 +48,13 @@ class MascotasSerializer(serializers.ModelSerializer):
     # def validate(self, attrs):
     #     raise serializers.ValidationError("Prueba de error non-field")
     #     return attrs
+
+    def validate(self, data):
+        """
+        validacion de general de prueba
+        """
+
+        if data["persona"] == None:
+            raise serializers.ValidationError("Campo Persona no puede estar vacio")
+
+        return data
