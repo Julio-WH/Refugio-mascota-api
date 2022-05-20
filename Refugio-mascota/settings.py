@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'app.adopcion',
     'app.mascota',
+    'app.almacen',
 ]
 
 MIDDLEWARE_CLASSES = [
