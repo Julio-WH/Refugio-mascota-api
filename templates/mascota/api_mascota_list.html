@@ -40,6 +40,8 @@
                 <a type="button" href="{% url 'mascota:api_edit' tipo mascota.id  %} " class="btn btn-primary"><img src="https://img.icons8.com/ios-glyphs/30/000000/edit--v4.png"/></a>
                 <a type="button" href="{% url 'mascota:api_delete' tipo mascota.id  %}" class="btn btn-danger"><img src="https://img.icons8.com/ios-glyphs/30/000000/filled-trash.png"/></a>
                 <a type="button" href="{% url 'mascota:api_mascota_persona' tipo mascota.id %} " class="btn btn-warning">Ver Dueño</a>
+                <a type="button" href="{% url 'mascota:api_edit2' mascota.id  %} " class="btn btn-primary"><img src="https://img.icons8.com/ios-glyphs/30/000000/edit--v4.png"/></a>
+                <a type="button" href="{% url 'mascota:api_edit3' mascota.id  %} " class="btn btn-warning"><img src="https://img.icons8.com/ios-glyphs/30/000000/edit--v4.png"/></a>
             </td>
           </tr>
           {%endfor%}

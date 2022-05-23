@@ -1,6 +1,7 @@
+import copy
 import json
 
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from rest_framework.parsers import JSONParser
@@ -161,12 +162,13 @@ def api_edit(request, tipo_api, id_mascota):
                 for error in serializers_errors:
                     if error == 'non_field_errors':
                         form.add_error('__all__', serializers_errors.get(error)[0])
-                        continue
-                    form.add_error(error, serializers_errors.get(error)[0])
+                    else:
+                        form.add_error(error, serializers_errors.get(error)[0])
     else:
         if tipo_api == "ApiView":
             instance = DetalleMascota()
             mascota_instance = instance.get(request=request, pk=id_mascota)
+
 
         elif tipo_api == "ViewSet":
             # Forma 2 para hacer una peticion accediendo direntamente al la funcion
@@ -181,11 +183,90 @@ def api_edit(request, tipo_api, id_mascota):
         elif tipo_api == "Decorador":
             mascota_instance = detail_mascota(request=request, pk=id_mascota)
 
-        mascota_instance = mascota_instance.data
-        mascota_instance = format_mascota(mascota_instance)
-        mascota_instance['vacuna'] = vacunas = [d['id'] for d in mascota_instance.get('vacuna')]
-        mascota_instance['persona'] = mascota_instance.get('persona').get('id')
-        form = MascotaApiForm(initial=mascota_instance)
+        # mascota_instance = mascota_instance.data
+        # mascota_instance = format_mascota(mascota_instance)
+        # mascota_instance['vacuna'] = vacunas = [d['id'] for d in mascota_instance.get('vacuna')]
+        # mascota_instance['persona'] = mascota_instance.get('persona').get('id')
+        # form = MascotaApiForm(initial=mascota_instance)
+
+        mascota_instance.data.update({
+            'persona': mascota_instance.data.get('persona').get('id'),
+            'vacuna': [d['id'] for d in mascota_instance.data.get('vacuna')],
+        })
+        form = MascotaApiForm(initial=mascota_instance.data)
+
+    datos = {'form': form, 'tipo': tipo_api}
+    return render(request, 'mascota/api_mascota_form.html', datos)
+
+
+def api_edit2(request, id_mascota):
+    """
+    Se obtiene la instancia del modelo desde la respuesta del APIVIEW en mascota.data.serializer.instance
+     y se manda a un modelForm.
+    """
+
+    tipo_api = 'ApiView2'
+
+    if request.method == 'POST':
+
+        request.method = 'GET'
+        mascota = DetalleMascota.as_view()(request=request, pk=id_mascota)
+        mascota = mascota.data.serializer.instance
+
+        form = MascotaForm(request.POST, instance=mascota)
+        if form.is_valid:
+            request.method = "PUT"
+            mascota_instance = DetalleMascota.as_view()(request=request, pk=id_mascota)
+
+            if mascota_instance.status_code == status.HTTP_200_OK:
+                messages.success(request, "Se Edito Correctamente la Mascota")
+                return HttpResponseRedirect((reverse('mascota:api_list', args=['ApiView'])))
+            else:
+                # En caso de errores provenientes del endpoint los agregamos manualmente al formulario
+                serializers_errors = mascota_instance.data.serializer.errors
+                for error in serializers_errors:
+                    if error == 'non_field_errors':
+                        form.add_error('__all__', serializers_errors.get(error)[0])
+                    else:
+                        form.add_error(error, serializers_errors.get(error)[0])
+    else:
+        mascota = DetalleMascota.as_view()(request=request, pk=id_mascota)
+
+        mascota = mascota.data.serializer.instance
+        form = MascotaForm(instance=mascota)
+
+    datos = {'form': form, 'tipo': tipo_api}
+    return render(request, 'mascota/api_mascota_form.html', datos)
+
+
+def api_edit3(request, id_mascota):
+    """
+    Se obtiene la instancia del modelo desde DB con get_object_or_404(Mascota, id=id_mascota)
+    y se manda a un modelForm.
+    """
+
+    tipo_api = 'ApiView2 get_object_or_404 '
+
+    mascota = get_object_or_404(Mascota, id=id_mascota)
+    form = MascotaForm(instance=mascota)
+
+    if request.method == 'POST':
+        form = MascotaForm(request.POST, instance=mascota)
+        if form.is_valid:
+            request.method = "PUT"
+            mascota_instance = DetalleMascota.as_view()(request=request, pk=id_mascota)
+
+            if mascota_instance.status_code == status.HTTP_200_OK:
+                messages.success(request, "Se Edito Correctamente la Mascota")
+                return HttpResponseRedirect((reverse('mascota:api_list', args=['ApiView'])))
+            else:
+                # En caso de errores provenientes del endpoint los agregamos manualmente al formulario
+                serializers_errors = mascota_instance.data.serializer.errors
+                for error in serializers_errors:
+                    if error == 'non_field_errors':
+                        form.add_error('__all__', serializers_errors.get(error)[0])
+                    else:
+                        form.add_error(error, serializers_errors.get(error)[0])
 
     datos = {'form': form, 'tipo': tipo_api}
     return render(request, 'mascota/api_mascota_form.html', datos)
@@ -219,8 +300,8 @@ def api_add(request, tipo_api):
             for error in serializers_errors:
                 if error == 'non_field_errors':
                     form.add_error('__all__', serializers_errors.get(error)[0])
-                    continue
-                form.add_error(error, serializers_errors.get(error)[0])
+                else:
+                    form.add_error(error, serializers_errors.get(error)[0])
     datos = {'form': form, 'tipo': tipo_api}
     return render(request, 'mascota/api_mascota_form.html', datos)
 
@@ -294,4 +375,3 @@ def api_mascota_persona(request, tipo_api, id_mascota):
 
     datos = {'persona': mascota_persona_instance, 'tipo': tipo_api}
     return render(request, 'mascota/api_mascota_persona.html', datos)
-    pass
