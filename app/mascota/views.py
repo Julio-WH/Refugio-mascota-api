@@ -1,4 +1,3 @@
-import copy
 import json
 
 from django.shortcuts import render, redirect, reverse, get_object_or_404
@@ -168,7 +167,6 @@ def api_edit(request, tipo_api, id_mascota):
         if tipo_api == "ApiView":
             instance = DetalleMascota()
             mascota_instance = instance.get(request=request, pk=id_mascota)
-
 
         elif tipo_api == "ViewSet":
             # Forma 2 para hacer una peticion accediendo direntamente al la funcion
